@@ -26,8 +26,16 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+}
+
+form {
+  width: 60%;
+  padding: 50px;
+  border-radius: 10px;
+  background-color: #a5d7e8;
 }
 
 h1 {
