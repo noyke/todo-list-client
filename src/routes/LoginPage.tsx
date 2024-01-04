@@ -24,6 +24,7 @@ const LoginPage = () => {
       } else {
         setIsValidUser(true);
         localStorage.setItem("accessToken", response.data);
+        localStorage.setItem("userName", userData.user_name);
         navigate("/");
       }
     } catch (err) {
