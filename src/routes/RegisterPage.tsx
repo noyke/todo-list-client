@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import UserForm from "../components/UserForm";
 
 const RegisterPage = () => {
   const [userName, setUserName] = useState("");
@@ -8,6 +9,11 @@ const RegisterPage = () => {
   const [isUserNameAvailable, setIsUserNameAvailable] = useState(true);
 
   const navigate = useNavigate();
+
+  const handleSetUserName = (value: string) => {
+    setIsUserNameAvailable(true);
+    setUserName(value);
+  };
 
   const handleClick = async () => {
     const userData = {
@@ -28,36 +34,16 @@ const RegisterPage = () => {
   };
 
   return (
-    <div>
-      <h2>Register:</h2>
-      <form onSubmit={(event) => event.preventDefault()}>
-        <label>
-          Choose User Name:
-          <input
-            type="text"
-            name="userName"
-            onChange={(event) => setUserName(event.target.value)}
-          ></input>
-        </label>
-        <div>
-          <label>
-            Choose Password:
-            <input
-              type="password"
-              name="password"
-              onChange={(event) => setUserPassword(event.target.value)}
-            ></input>
-          </label>
-        </div>
-        <h2></h2>
-        <button type="submit" onClick={handleClick}>
-          Register
-        </button>
-        {!isUserNameAvailable && (
-          <h4>User name is unavailable, please choose another</h4>
-        )}
-      </form>
-    </div>
+    <UserForm
+      isLoginForm={false}
+      userName={userName}
+      setUserName={handleSetUserName}
+      userPassword={userPassword}
+      setUserPassword={setUserPassword}
+      handleClick={handleClick}
+      displayError={!isUserNameAvailable}
+      errorText="User Name Is Unavailable, Please Choose Another"
+    />
   );
 };
 

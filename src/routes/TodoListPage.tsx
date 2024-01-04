@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Button, Form, Container } from "react-bootstrap";
 
 interface todoItem {
   todo_item: string;
@@ -85,24 +86,38 @@ const TodoListPage = () => {
   return (
     <>
       <p style={{ display: "flex", justifyContent: "flex-end" }}>
-        <button onClick={logout}>logOut</button>
+        <Button variant="danger" onClick={logout}>
+          logOut
+        </Button>
       </p>
-      <h3>{`${localStorage.getItem("userName")}'s Todo List`}</h3>
-      {todoList.map((item) => (
-        <p key={item.todo_item}>
-          <input onClick={() => handleCheck(item.todo_item)} type="checkbox" />
-          <label>{item.todo_item}</label>
-        </p>
-      ))}
-      <p>
-        <input
-          id="todoText"
-          type="text"
-          onChange={(event) => setTodo(event.target.value)}
-          value={todo}
-        />
-        <button onClick={addTodo}>Add todo</button>
-      </p>
+      <Container>
+        <Form>
+          <h2>{`${localStorage.getItem("userName")}'s Todo List`}</h2>
+          {todoList.map((item) => (
+            <Form.Check
+              key={item.todo_item}
+              label={item.todo_item}
+              style={{ fontSize: "20px" }}
+              onClick={() => handleCheck(item.todo_item)}
+            />
+          ))}
+          <p>
+            <input
+              id="todoText"
+              type="text"
+              onChange={(event) => setTodo(event.target.value)}
+              value={todo}
+            />
+            <Button
+              variant="success"
+              style={{ margin: "20px" }}
+              onClick={addTodo}
+            >
+              Add todo
+            </Button>
+          </p>
+        </Form>
+      </Container>
     </>
   );
 };

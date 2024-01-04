@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import UserForm from "../components/UserForm";
 
 const LoginPage = () => {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [isValidUser, setIsValidUser] = useState(true);
+
+  const handleSetUserName = (value: string) => {
+    setIsValidUser(true);
+    setUserName(value);
+  };
 
   const navigate = useNavigate();
 
@@ -32,37 +38,16 @@ const LoginPage = () => {
     }
   };
   return (
-    <div>
-      <h2>Login:</h2>
-      <form onSubmit={(event) => event.preventDefault()}>
-        <label>
-          User Name:
-          <input
-            type="text"
-            name="userName"
-            onChange={(event) => setUserName(event.target.value)}
-          ></input>
-        </label>
-        <div>
-          <label>
-            Password:
-            <input
-              type="password"
-              name="password"
-              onChange={(event) => setUserPassword(event.target.value)}
-            ></input>
-          </label>
-        </div>
-        <h2></h2>
-        <button type="submit" onClick={handleClick}>
-          Login
-        </button>
-        {!isValidUser && <h4 color="red">Incorrect username or password</h4>}
-      </form>
-      <h3>
-        <Link to={"/register"}>Register?</Link>
-      </h3>
-    </div>
+    <UserForm
+      isLoginForm={true}
+      userName={userName}
+      setUserName={handleSetUserName}
+      userPassword={userPassword}
+      setUserPassword={setUserPassword}
+      handleClick={handleClick}
+      displayError={!isValidUser}
+      errorText="Incorrect User Name Or Password"
+    />
   );
 };
 
