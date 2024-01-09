@@ -10,6 +10,7 @@ interface todoItem {
 const TodoListPage = () => {
   const [todo, setTodo] = useState("");
   const [todoList, setTodoList] = useState<todoItem[]>([]);
+  const [userName, setUserName] = useState("");
 
   const navigate = useNavigate();
 
@@ -19,14 +20,15 @@ const TodoListPage = () => {
   };
 
   const addTodo = async () => {
-    const todoData = {
-      user_name: localStorage.getItem("userName"),
-      todo_item: todo,
-    };
     try {
       const response = await axios.post(
         "http://localhost:3000/addtodo",
-        todoData
+        { todo_item: todo },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
       );
       console.log(response.data);
       setTodo("");
@@ -37,33 +39,6 @@ const TodoListPage = () => {
   };
 
   const getTodoList = async () => {
-    const obj = { user_name: localStorage.getItem("userName") };
-    try {
-      const response = await axios.post("http://localhost:3000/gettodos", obj);
-      setTodoList(response.data);
-    } catch (err) {
-      console.log("error:", err);
-    }
-  };
-
-  const handleCheck = async (todoToDelete: string) => {
-    const todoToDeleteData = {
-      user_name: localStorage.getItem("userName"),
-      todo_item: todoToDelete,
-    };
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/deletetodo",
-        todoToDeleteData
-      );
-      getTodoList();
-      console.log(response.data);
-    } catch (err) {
-      console.log("error:", err);
-    }
-  };
-
-  const validation = async () => {
     try {
       const response = await axios.get("http://localhost:3000/todos", {
         headers: {
@@ -72,14 +47,34 @@ const TodoListPage = () => {
       });
       if (response.data.UserError) {
         navigate("/login");
+      } else {
+        setTodoList(response.data.todo_list);
+        setUserName(response.data.user_name);
       }
     } catch (err) {
       console.log("error:", err);
     }
   };
 
+  const handleCheck = async (todoToDelete: string) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/deletetodo",
+        { todo_item: todoToDelete },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      getTodoList();
+      console.log(response.data);
+    } catch (err) {
+      console.log("error:", err);
+    }
+  };
+
   useEffect(() => {
-    validation();
     getTodoList();
   }, []);
 
@@ -92,7 +87,7 @@ const TodoListPage = () => {
       </p>
       <Container>
         <Form>
-          <h2>{`${localStorage.getItem("userName")}'s Todo List`}</h2>
+          <h2>{`${userName}'s Todo List`}</h2>
           {todoList.map((item) => (
             <Form.Check
               key={item.todo_item}
